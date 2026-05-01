@@ -1,4 +1,4 @@
-import { Color, EventDispatcher, Fog, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { Color, EventDispatcher, Fog, GridHelper, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { PuttyControls } from './PuttyControls.js';
 import { Compositor } from './Compositor.js';
@@ -26,18 +26,21 @@ class Demo {
 
     // Add putty controls (for transforming objects)
     this.puttyControls = new PuttyControls(this.camera, this.renderer.domElement);
-    this.puttyControls.snap = 0.25;
+    this.puttyControls.snap = 0.5;
     this.puttyControls.addEventListener('dragstart', () => this.orbitControls.enabled = false);
     this.puttyControls.addEventListener('dragend', () => this.orbitControls.enabled = true);
   }
 
   init() {
     // Update camera
-    this.camera.position.set(2.5, 2.5, 2.5);
+    this.camera.position.set(0, 2, 4);
     this.camera.lookAt(0, 0, 0);
 
     // Add hemisphere light
     this.scene.add(new HemisphereLight('#ffffff', '#cccccc', Math.PI));
+
+    // Add grid helper
+    this.scene.add(new GridHelper(8, 16, '#cccccc', '#eeeeee'));
 
     // Add Putty controls object to scene
     this.scene.add(this.puttyControls.getHelper());
