@@ -1,0 +1,4 @@
+# Default ignores
+node_modules
+dist
+package-lock.json

@@ -1,0 +1,37 @@
+* {
+  box-sizing: border-box;
+  user-select: none;
+  font-size: 100%;
+  text-transform: uppercase;
+}
+
+*:focus-visible {
+  outline: none;
+}
+
+html {
+  -ms-touch-action: manipulation;
+  height: 100vh;
+  min-height: 22.5em; // 360px
+  min-width: 40em; // 640px
+  overflow: hidden;
+  touch-action: manipulation;
+  width: 100vw;
+
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    font-size: clamp(1em, 4vh, 4em); // fallback without round()
+    font-size: clamp(1em, calc(round(down, 4vh, 0.5em)), 4em); // 2em (< 600px), 3em (600px), 4em (800px)
+    letter-spacing: calc(1em / 16);
+    line-height: 1em;
+    width: inherit;
+    height: inherit;
+    overflow: hidden;
+
+    #app {
+      height: inherit;
+      width: inherit;
+    }
+  }
+}
