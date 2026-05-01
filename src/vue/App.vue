@@ -6,6 +6,8 @@
   const canvasRef = ref();
   const demo = new Demo();
 
+  demo.init();
+
   // Initialize app after canvas has been mounted
   onMounted(() => {
     // Replace canvas element

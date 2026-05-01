@@ -58,7 +58,7 @@ class PuttyControls extends Controls {
     }
 
     // Define points material
-    this.pointMaterial = new PointsMaterial({ depthTest: false, depthWrite: false, transparent: true, size: 8, sizeAttenuation: true, vertexColors: true });
+    this.pointMaterial = new PointsMaterial({ depthTest: false, depthWrite: false, transparent: true, size: 8, sizeAttenuation: false, vertexColors: true });
     
     // Define pointA
     const pointGeometryA = new BufferGeometry();
@@ -89,8 +89,8 @@ class PuttyControls extends Controls {
 
     // Initialize drag controls (points first for priority)
     this.dragControls = new DragControls([this.pointA, this.pointB, this.line], camera, domElement);
-    this.dragControls.raycaster.params.Points.threshold = 4;
-    this.dragControls.raycaster.params.Line.threshold = 2;
+    this.dragControls.raycaster.params.Points.threshold = 0.1;
+    this.dragControls.raycaster.params.Line.threshold = 0.1;
     
     // Override raycaster intersectObjects to prioritize points over line
     const originalIntersect = this.dragControls.raycaster.intersectObjects.bind(this.dragControls.raycaster);
@@ -228,6 +228,7 @@ class PuttyControls extends Controls {
     
     // Bubble up event
     this.dispatchEvent(event);
+    this.dispatchEvent(_changeEvent);
   }
 
   onDrag = event => {
@@ -277,12 +278,14 @@ class PuttyControls extends Controls {
 
     // Bubble up event
     this.dispatchEvent(event);
+    this.dispatchEvent(_changeEvent);
     this.dispatchEvent(_objectChangeEvent);
   }
 
   onDragEnd = event => {
     // Bubble up event
     this.dispatchEvent(event);
+    this.dispatchEvent(_changeEvent);
   }
 
   onHoverOff = event => {
@@ -300,6 +303,7 @@ class PuttyControls extends Controls {
 
     // Bubble up event
     this.dispatchEvent(event);
+    this.dispatchEvent(_changeEvent);
   }
 
   onHoverOn = event => {
@@ -316,6 +320,7 @@ class PuttyControls extends Controls {
 
     // Bubble up event
     this.dispatchEvent(event);
+    this.dispatchEvent(_changeEvent);
   }
 
   attach(object) {
