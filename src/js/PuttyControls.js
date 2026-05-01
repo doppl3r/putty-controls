@@ -41,6 +41,8 @@ class PuttyControls extends Controls {
   constructor(camera, domElement) {
     // Inherit Three.js core Controls class
     super(camera, domElement);
+    this.camera = camera;
+    this.domElement = domElement;
 
     // Add reactive properties
     const defineProperty = (name, value) => {
@@ -87,10 +89,16 @@ class PuttyControls extends Controls {
     this.group.visible = false;
     this.group.add(this.line, this.pointA, this.pointB);
 
+    // Override updateMatrixWorld to update thresholds every frame
+    const scope = this;
+    const originalUpdateMatrixWorld = this.group.updateMatrixWorld.bind(this.group);
+    this.group.updateMatrixWorld = force => {
+      scope.updateThresholds();
+      originalUpdateMatrixWorld(force);
+    };
+
     // Initialize drag controls (points first for priority)
     this.dragControls = new DragControls([this.pointA, this.pointB, this.line], camera, domElement);
-    this.dragControls.raycaster.params.Points.threshold = 0.1;
-    this.dragControls.raycaster.params.Line.threshold = 0.1;
     
     // Override raycaster intersectObjects to prioritize points over line
     const originalIntersect = this.dragControls.raycaster.intersectObjects.bind(this.dragControls.raycaster);
@@ -148,6 +156,15 @@ class PuttyControls extends Controls {
     const axisSettings = this.getAxisSettings();
     const scaleKey = axisSettings.scaleKey;
     return (object?.scale?.[scaleKey] || 0) / 2;
+  }
+
+  updateThresholds() {
+    if (!this.object || !this.camera) return;
+
+    // Scale thresholds based on camera distance (adjust multiplier as needed)
+    const scaleFactor = this.camera.position.distanceTo(this.object.position) * 0.01;
+    this.dragControls.raycaster.params.Points.threshold = scaleFactor;
+    this.dragControls.raycaster.params.Line.threshold = scaleFactor;
   }
 
   updatePointsFromLine() {
