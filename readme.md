@@ -15,8 +15,7 @@ Link: [src/js/PuttyControls.js](src/js/PuttyControls.js)
 ```
 // Create controls
 const puttyControls = new PuttyControls(camera, renderer.domElement);
-const gizmo = puttyControls.getHelper();
-scene.add(gizmo);
+scene.add(puttyControls.getHelper());
 
 // Attach to any 3D object
 puttyControls.attach(mesh);
@@ -24,7 +23,7 @@ puttyControls.attach(mesh);
 
 ## Demo
 
-Link: [https://doppl3r.github.io/putty-controls/demo/](https://doppl3r.github.io/putty-controls/demo/)
+Link: [https://htmlpreview.github.io/?https://github.com/doppl3r/putty-controls/blob/main/demo/index.html](https://htmlpreview.github.io/?https://github.com/doppl3r/putty-controls/blob/main/demo/index.html)
 
 ## Screenshot
 
