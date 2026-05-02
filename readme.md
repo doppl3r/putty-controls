@@ -2,7 +2,9 @@
 
 Putty Controls is a Three.js module that lets you scale and rotate an object between two points.
 
-Download: [src/js/PuttyControls.js](src/js/PuttyControls.js)
+## Download
+
+Link: [src/js/PuttyControls.js](src/js/PuttyControls.js)
 
 ## Import
 
@@ -19,6 +21,10 @@ scene.add(gizmo);
 // Attach to any 3D object
 puttyControls.attach(mesh);
 ```
+
+## Demo
+
+Link: [https://doppl3r.github.io/putty-controls/demo/](https://doppl3r.github.io/putty-controls/demo/)
 
 ## Screenshot
 

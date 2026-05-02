@@ -6,7 +6,7 @@ export default defineConfig(async () => ({
   base: './',
   build: {
     emptyOutDir: true,
-    outDir: './dist',
+    outDir: './demo',
     target: "es2022"
   },
   css: {
