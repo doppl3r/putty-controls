@@ -27,6 +27,8 @@ class Demo {
     // Add putty controls (for transforming objects)
     this.puttyControls = new PuttyControls(this.camera, this.renderer.domElement);
     this.puttyControls.snap = 0.5;
+    this.puttyControls.axis = 'X';
+    this.puttyControls.lockRotation = true;
     this.puttyControls.addEventListener('dragstart', () => this.orbitControls.enabled = false);
     this.puttyControls.addEventListener('dragend', () => this.orbitControls.enabled = true);
   }

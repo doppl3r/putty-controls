@@ -158,15 +158,6 @@ class PuttyControls extends Controls {
     return (object?.scale?.[scaleKey] || 0) / 2;
   }
 
-  updateThresholds() {
-    if (!this.object || !this.camera) return;
-
-    // Scale thresholds based on camera distance (adjust multiplier as needed)
-    const scaleFactor = this.camera.position.distanceTo(this.object.position) * this.threshold;
-    this.dragControls.raycaster.params.Points.threshold = scaleFactor;
-    this.dragControls.raycaster.params.Line.threshold = scaleFactor;
-  }
-
   updatePointsFromLine() {
     const linePositions = this.lineGeometry.attributes.position;
     
@@ -232,6 +223,36 @@ class PuttyControls extends Controls {
     const direction = new Vector3().subVectors(this.pointB.position, this.pointA.position).normalize();
     const quaternion = new Quaternion().setFromUnitVectors(axisSettings.localPrimaryAxis, direction);
     this.object.quaternion.copy(quaternion);
+  }
+
+  updateThresholds() {
+    if (!this.object || !this.camera) return;
+
+    // Scale thresholds based on camera distance (adjust multiplier as needed)
+    const scaleFactor = this.camera.position.distanceTo(this.object.position) * this.threshold;
+    this.dragControls.raycaster.params.Points.threshold = scaleFactor;
+    this.dragControls.raycaster.params.Line.threshold = scaleFactor;
+  }
+
+  updateColors(color) {
+    // Update color for the entire group
+    this.group.traverse(child => this.updateColorByType(child, color));
+  }
+
+  updateColorByType(object, color) {
+    if (object.isLine) this.updateLineColor(color);
+    else if (object.isPoints) this.updatePointColor(object, color);
+  }
+
+  updatePointColor(point, color) {
+    const rgb = new Color(color);
+    const colorAttr = point.geometry.attributes.color;
+    colorAttr.setXYZ(0, rgb.r, rgb.g, rgb.b);
+    colorAttr.needsUpdate = true;
+  }
+
+  updateLineColor(color) {
+    this.lineMaterial.color.set(color);
   }
 
   onDragStart = event => {
@@ -306,17 +327,7 @@ class PuttyControls extends Controls {
   }
 
   onHoverOff = event => {
-    // Update line or point vertex color
-    const color = this.getAxisSettings().color;
-    this.lineMaterial.color.set(color);
-    
-    // Update point vertex colors
-    if (event.object.isPoints) {
-      const colorAttr = event.object.geometry.attributes.color;
-      const rgb = new Color(color);
-      colorAttr.setXYZ(0, rgb.r, rgb.g, rgb.b);
-      colorAttr.needsUpdate = true;
-    }
+    this.updateColorByType(event.object, this.getAxisSettings().color);
 
     // Bubble up event
     this.dispatchEvent(event);
@@ -324,16 +335,7 @@ class PuttyControls extends Controls {
   }
 
   onHoverOn = event => {
-    // Update line or point vertex color
-    if (event.object.isLine) {
-      this.lineMaterial.color.set(this.getAxisSettings().colorHover);
-    }
-    else if (event.object.isPoints) {
-      const colorAttr = event.object.geometry.attributes.color;
-      const rgb = new Color(this.getAxisSettings().colorHover);
-      colorAttr.setXYZ(0, rgb.r, rgb.g, rgb.b);
-      colorAttr.needsUpdate = true;
-    }
+    this.updateColorByType(event.object, this.getAxisSettings().colorHover);
 
     // Bubble up event
     this.dispatchEvent(event);
@@ -362,6 +364,7 @@ class PuttyControls extends Controls {
 
     this.updateLineFromPoints();
     this.updateThresholds();
+    this.updateColors(this.getAxisSettings().color);
   }
 
   detach() {
@@ -379,19 +382,7 @@ class PuttyControls extends Controls {
 
   setAxis(axis) {
     this.axis = axis;
-    const color = this.getAxisSettings().color;
-    const rgb = new Color(color);
-    
-    // Update both point colors
-    const colorAttrA = this.pointA.geometry.attributes.color;
-    colorAttrA.setXYZ(0, rgb.r, rgb.g, rgb.b);
-    colorAttrA.needsUpdate = true;
-    
-    const colorAttrB = this.pointB.geometry.attributes.color;
-    colorAttrB.setXYZ(0, rgb.r, rgb.g, rgb.b);
-    colorAttrB.needsUpdate = true;
-    
-    this.lineMaterial.color.set(color);
+    this.updateColors(this.getAxisSettings().color);
     if (this.object) this.attach(this.object);
   }
 }
