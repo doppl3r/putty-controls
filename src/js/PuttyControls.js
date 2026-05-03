@@ -345,6 +345,7 @@ class PuttyControls extends Controls {
   attach(object) {
     this.object = object;
     this.group.visible = true;
+    this.dragControls.enabled = this.enabled;
 
     // Calculate axis direction and object half extent for positioning the points.
     const axisDirection = this.getAxisDirection();
@@ -370,6 +371,7 @@ class PuttyControls extends Controls {
   detach() {
     this.object = undefined;
     this.group.visible = false;
+    this.dragControls.enabled = false;
   }
 
   getHelper() {
