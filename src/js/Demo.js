@@ -1,4 +1,5 @@
 import { Color, EventDispatcher, Fog, GridHelper, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { PuttyControls } from './PuttyControls.js';
 import { Compositor } from './Compositor.js';
@@ -26,23 +27,30 @@ class Demo {
 
     // Add putty controls (for transforming objects)
     this.puttyControls = new PuttyControls(this.camera, this.renderer.domElement);
-    this.puttyControls.snap = 0.5;
+    this.puttyControls.snap = 0.25;
     this.puttyControls.axis = 'X';
-    this.puttyControls.lockRotation = true;
     this.puttyControls.addEventListener('dragstart', () => this.orbitControls.enabled = false);
     this.puttyControls.addEventListener('dragend', () => this.orbitControls.enabled = true);
+
+    // Add GUI
+    this.gui = new GUI();
+    this.gui.add(this.puttyControls, 'axis', ['X', 'Y', 'Z']);
+    this.gui.add(this.puttyControls, 'snap').min(0).step(0.25).max(1);
+    this.gui.add(this.puttyControls, 'lockRatio');
+    this.gui.add(this.puttyControls, 'lockRotation');
   }
 
   init() {
     // Update camera
-    this.camera.position.set(0, 2, 4);
-    this.camera.lookAt(0, 0, 0);
+    this.camera.position.set(1, 2, 2);
+    this.orbitControls.target.set(0, 0.5, 0);
+    this.orbitControls.update();
 
     // Add hemisphere light
     this.scene.add(new HemisphereLight('#ffffff', '#cccccc', Math.PI));
 
     // Add grid helper
-    this.scene.add(new GridHelper(8, 16, '#cccccc', '#eeeeee'));
+    this.scene.add(new GridHelper(8, 32, '#cccccc', '#eeeeee'));
 
     // Add Putty controls object to scene
     this.scene.add(this.puttyControls.getHelper());
