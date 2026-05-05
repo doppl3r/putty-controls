@@ -27,7 +27,7 @@ class Demo {
 
     // Add putty controls (for transforming objects)
     this.puttyControls = new PuttyControls(this.camera, this.renderer.domElement);
-    this.puttyControls.snap = 0.25;
+    this.puttyControls.snap = 1;
     this.puttyControls.axis = 'X';
     this.puttyControls.addEventListener('dragstart', () => this.orbitControls.enabled = false);
     this.puttyControls.addEventListener('dragend', () => this.orbitControls.enabled = true);
@@ -35,22 +35,22 @@ class Demo {
     // Add GUI
     this.gui = new GUI();
     this.gui.add(this.puttyControls, 'axis', ['X', 'Y', 'Z']);
-    this.gui.add(this.puttyControls, 'snap').min(0).step(0.25).max(1);
+    this.gui.add(this.puttyControls, 'snap').min(0).step(1).max(2);
     this.gui.add(this.puttyControls, 'lockRatio');
     this.gui.add(this.puttyControls, 'lockRotation');
   }
 
   init() {
     // Update camera
-    this.camera.position.set(1, 2, 2);
-    this.orbitControls.target.set(0, 0.5, 0);
+    this.camera.position.set(0, 8, 8);
+    this.orbitControls.target.set(0, 2, 0);
     this.orbitControls.update();
 
     // Add hemisphere light
     this.scene.add(new HemisphereLight('#ffffff', '#cccccc', Math.PI));
 
     // Add grid helper
-    this.scene.add(new GridHelper(8, 32, '#cccccc', '#eeeeee'));
+    this.scene.add(new GridHelper(16, 16, '#cccccc', '#eeeeee'));
 
     // Add Putty controls object to scene
     this.scene.add(this.puttyControls.getHelper());
@@ -58,6 +58,7 @@ class Demo {
     // Load model
     this.assets.load('glb/player.glb', model => {
       this.scene.add(model);
+      model.scale.set(4, 4, 4)
       this.puttyControls.attach(model);
     });
   }
