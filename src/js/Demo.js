@@ -29,15 +29,16 @@ class Demo {
     this.puttyControls = new PuttyControls(this.camera, this.renderer.domElement);
     this.puttyControls.snap = 1;
     this.puttyControls.axis = 'X';
+    this.puttyControls.lockRatio = true;
     this.puttyControls.addEventListener('dragstart', () => this.orbitControls.enabled = false);
     this.puttyControls.addEventListener('dragend', () => this.orbitControls.enabled = true);
 
     // Add GUI
     this.gui = new GUI();
+    this.gui.title('Options');
     this.gui.add(this.puttyControls, 'axis', ['X', 'Y', 'Z']);
-    this.gui.add(this.puttyControls, 'snap').min(0).step(1).max(2);
+    this.gui.add(this.puttyControls, 'snap', [0, 0.5, 1]);
     this.gui.add(this.puttyControls, 'lockRatio');
-    this.gui.add(this.puttyControls, 'lockRotation');
   }
 
   init() {
